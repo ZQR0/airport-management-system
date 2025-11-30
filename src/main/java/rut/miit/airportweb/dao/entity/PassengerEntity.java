@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "passenger_entity")
 @Table(name = "passengers", schema = "public")
 @Setter
 public class PassengerEntity {

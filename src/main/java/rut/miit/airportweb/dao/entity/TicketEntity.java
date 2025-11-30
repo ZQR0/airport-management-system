@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "ticket_entity")
 @Table(name = "tickets", schema = "public")
 @Setter
 public class TicketEntity {
