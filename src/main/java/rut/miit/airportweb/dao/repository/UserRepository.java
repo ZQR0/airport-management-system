@@ -1,5 +1,6 @@
 package rut.miit.airportweb.dao.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import rut.miit.airportweb.dao.entity.UserEntity;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * В целом по названию методов думаю понятно что они делают
  * */
 @Repository
-public interface UserRepository {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Optional<UserEntity> findByUsername(String username);
 
