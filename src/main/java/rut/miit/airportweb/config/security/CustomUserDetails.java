@@ -1,9 +1,16 @@
 package rut.miit.airportweb.config.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import rut.miit.airportweb.dao.entity.UserEntity;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,40 +21,52 @@ import java.util.List;
  * Здесь должны быть все те же поля, что и у пользователя в базе данных.
  * Ознакомиться с пользователями можно в {@link rut.miit.airportweb.dao.entity.UserEntity} и однопакетных классах
  * */
+@Builder
+@AllArgsConstructor
+@Getter
+@Setter
 public class CustomUserDetails implements UserDetails {
+
+    private Integer id;
+    private String username;
+    private String password;
+    private UserEntity.Role role;
+    private String firstName;
+    private String lastName;
+    private LocalDateTime createdAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 }
