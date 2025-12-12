@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class FlightDto {
 
     private Integer id;
@@ -42,23 +43,6 @@ public class FlightDto {
 
     private UserDto createdBy;
 
-    // Constructors
+    // Оставляем только один конструктор
     public FlightDto() {}
-
-    public FlightDto(Integer id, String flightNumber, String departureCity, String arrivalCity,
-                     LocalDateTime departureTime, LocalDateTime arrivalTime,
-                     Integer totalSeats, Integer availableSeats, String status,
-                     UserDto createdBy) {
-        this.id = id;
-        this.flightNumber = flightNumber;
-        this.departureCity = departureCity;
-        this.arrivalCity = arrivalCity;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.totalSeats = totalSeats;
-        this.availableSeats = availableSeats;
-        this.status = status;
-        this.createdBy = createdBy;
-    }
-
 }

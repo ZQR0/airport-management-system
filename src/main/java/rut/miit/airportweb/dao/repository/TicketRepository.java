@@ -1,6 +1,7 @@
 package rut.miit.airportweb.dao.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import rut.miit.airportweb.dao.entity.TicketEntity;
@@ -18,5 +19,18 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Integer> {
 
     @Query("SELECT DISTINCT t FROM ticket_entity t JOIN FETCH t.passenger p WHERE p.passportNumber = :passportNumber")
     List<TicketEntity> findAllByPassportNumber(String passportNumber);
+
+    @Modifying
+    @Query("UPDATE ticket_entity t SET t.status = :ticketStatus WHERE t.ticketNumber = :ticketNumber")
+    int updateTicketStatus(String ticketNumber, String ticketStatus);
+
+    // Добавляем метод для получения после обновления
+    default Optional<TicketEntity> updateTicketStatusAndGet(String ticketNumber, String ticketStatus) {
+        int updated = updateTicketStatus(ticketNumber, ticketStatus);
+        if (updated > 0) {
+            return findByTicketNumber(ticketNumber);
+        }
+        return Optional.empty();
+    }
 
 }

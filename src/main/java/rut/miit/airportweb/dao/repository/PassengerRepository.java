@@ -29,5 +29,14 @@ public interface PassengerRepository extends JpaRepository<PassengerEntity, Inte
 
     @Modifying
     @Query("UPDATE passenger_entity p SET p.luggageChecked = :value WHERE p.passportNumber = :passportNumber")
-    Optional<PassengerEntity> updateLuggageStatus(String passportNumber, boolean value);
+    int updateLuggageStatus(String passportNumber, boolean value);
+
+    // Добавляем метод для получения после обновления
+    default Optional<PassengerEntity> updateLuggageStatusAndGet(String passportNumber, boolean value) {
+        int updated = updateLuggageStatus(passportNumber, value);
+        if (updated > 0) {
+            return findByPassportNumber(passportNumber);
+        }
+        return Optional.empty();
+    }
 }

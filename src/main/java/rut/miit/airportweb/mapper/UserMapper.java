@@ -9,15 +9,20 @@ import rut.miit.airportweb.dto.UserRegistrationDto;
 public class UserMapper {
 
     public static UserDto map(UserEntity user) {
-        return UserDto.builder()
+        UserDto.UserDtoBuilder builder = UserDto.builder()
                 .username(user.getUsername())
                 .passwordHash(user.getPassword())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                .passportNumber(user.getPassenger().getPassportNumber())
-                .build();
+                .createdAt(user.getCreatedAt());
+
+        // Безопасное получение passportNumber
+        if (user.getPassenger() != null) {
+            builder.passportNumber(user.getPassenger().getPassportNumber());
+        }
+
+        return builder.build();
     }
 
     public static UserEntity map(UserRegistrationDto dto) {

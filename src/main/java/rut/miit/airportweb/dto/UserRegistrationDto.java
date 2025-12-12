@@ -6,7 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class UserRegistrationDto {
@@ -27,7 +31,6 @@ public class UserRegistrationDto {
     @Size(max = 50, message = "Last name must not exceed 50 characters")
     private String lastName;
 
-
     @Email(message = "Email should be valid")
     private String email;
 
@@ -39,33 +42,6 @@ public class UserRegistrationDto {
     @NotNull(message = "Passport number cannot be null")
     private String passportNumber;
 
-    // Constructors
+    // Удаляем ручные геттеры/сеттеры и оставляем только конструктор по умолчанию
     public UserRegistrationDto() {}
-
-    // Getters and Setters
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
-    public String getPassportNumber() {
-        return passportNumber;
-    }
-
-    public void setPassportNumber(String passportNumber) {
-        this.passportNumber = passportNumber;
-    }
 }

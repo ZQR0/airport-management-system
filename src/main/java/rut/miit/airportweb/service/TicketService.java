@@ -2,6 +2,7 @@ package rut.miit.airportweb.service;
 
 import rut.miit.airportweb.dto.TicketCreateDto;
 import rut.miit.airportweb.dto.TicketDto;
+import rut.miit.airportweb.dto.TicketUpdateDto;
 
 import java.util.List;
 
@@ -24,19 +25,19 @@ public interface TicketService {
      */
     TicketDto createTicket(TicketCreateDto ticketCreateDto);
 
-//    /**
-//     * Обновить билет
-//     * @param id идентификатор билета
-//     * @param ticketUpdateDto DTO обновления билета
-//     * @return обновленный билет
-//     */
-//    TicketDto updateTicket(Integer id, TicketUpdateDto ticketUpdateDto);
+    /**
+     * Обновить билет
+     * @param ticketNumber номер билета
+     * @param ticketUpdateDto DTO обновления билета
+     * @return обновленный билет
+     */
+    TicketDto updateTicket(String ticketNumber, TicketUpdateDto ticketUpdateDto);
 
     /**
      * Удалить билет
      * @param id идентификатор билета
      */
-    void deleteTicket(Integer id);
+    void deleteTicket(String ticketNumber);
 
     /**
      * Найти все билеты по номеру рейса
@@ -58,35 +59,35 @@ public interface TicketService {
      * @param newStatus новый статус
      * @return обновленный билет
      */
-    TicketDto updateTicketStatus(Integer ticketId, String newStatus);
+    TicketDto updateTicketStatus(String ticketNumber, String newStatus);
 
     /**
      * Зарегистрировать пассажира на рейс (чек-ин)
-     * @param ticketId ID билета
+     * @param ticketNumber Номер билета
      * @return билет после регистрации
      */
-    TicketDto checkInPassenger(Integer ticketId);
+    TicketDto checkInPassenger(String ticketNumber);
 
     /**
      * Посадить пассажира на рейс
-     * @param ticketId ID билета
+     * @param ticketNumber номер билета
      * @return билет после посадки
      */
-    TicketDto boardPassenger(Integer ticketId);
+    TicketDto boardPassenger(String ticketNumber);
 
     /**
      * Получить занятые места на рейсе
      * @param flightId ID рейса
      * @return список занятых мест
      */
-    List<String> getOccupiedSeats(Integer flightId);
+    List<String> getOccupiedSeats(String flightNumber);
 
     /**
      * Проверить доступность места
-     * @param flightId ID рейса
+     * @param flightNumber номер рейса
      * @param seatNumber номер места
      * @return true если место доступно
      */
-    boolean isSeatAvailable(Integer flightId, String seatNumber);
+    boolean isSeatAvailable(String flightNumber, String seatNumber);
 
 }

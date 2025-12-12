@@ -29,7 +29,7 @@ public class BoardingPassEntity {
     public Integer getId() { return id; }
 
     @OneToOne
-    @JoinColumn(name = "ticket_id", unique = true, nullable = false)
+    @JoinColumn(name = "ticket_id", unique = true)
     public TicketEntity getTicket() { return ticket; }
 
     @Column(name = "check_in_time")
