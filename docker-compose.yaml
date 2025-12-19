@@ -1,40 +1,71 @@
 services:
   postgres:
     image: postgres:18.0
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data-18
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: airport_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     healthcheck:
-      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
       timeout: 5s
+      retries: 10
       start_period: 10s
-      retries: 5
-#  redis:
-#    image: redis:7-alpine
-#    container_name: redis-cache
-#    ports:
-#      - "6379:6379"
-#    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
-#    environment:
-#      - REDIS_PASSWORD=admin_redis
-#    volumes:
-#      - redis_data:/data
-#    healthcheck:
-#      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-#      interval: 10s
-#      timeout: 3s
-#      retries: 3
+    command: >
+      postgres 
+      -c listen_addresses='*' 
+      -c max_connections=200
 
+  app:
+    image: airportweb:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8888:8888"
+    environment:
+      # Ключевые переменные - они переопределят значения из application.yaml
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/airport_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      
+      # Дополнительные настройки для лучшей работы в Docker
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_LIQUIBASE_ENABLED: "true"
+      SPRING_LIQUIBASE_CHANGELOG: classpath:db/changelog/changelog-master.yml
+
+    # Добавляем ожидание PostgreSQL
+    command: >
+      sh -c "
+      echo 'Waiting for PostgreSQL...' &&
+      sleep 15 &&
+      echo 'Starting application...' &&
+      java -XX:ReservedCodeCacheSize=$$JAVA_RESERVED_CODE_CACHE_SIZE \
+           -XX:MaxDirectMemorySize=$$JAVA_MAX_DIRECT_MEMORY_SIZE \
+           -XX:MaxMetaspaceSize=$$JAVA_MAX_METASPACE_SIZE \
+           -Xss$$JAVA_XSS \
+           -Xmx$$JAVA_XMX \
+           $$JAVA_HEAP_DUMP_OPTS \
+           $$JAVA_ON_OUT_OF_MEMORY_OPTS \
+           $$JAVA_ERROR_FILE_OPTS \
+           $$JAVA_NATIVE_MEMORY_TRACKING_OPTS \
+           $$JAVA_CDS_OPTS \
+           -jar app.jar
+      "
+    
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s  # Увеличьте время на запуск
 
 volumes:
   postgres_data:
-#  redis_data:
-
-

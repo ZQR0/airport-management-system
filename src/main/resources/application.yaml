@@ -5,12 +5,12 @@ spring:
   application:
     name: airportweb
   datasource:
-    url: jdbc:postgresql://localhost:5432/airport_db
+    url: jdbc:postgresql://postgres:5432/airport_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
     hikari:
-      jdbc-url: jdbc:postgresql://localhost:5432/airport_db
+      jdbc-url: jdbc:postgresql://postgres:5432/airport_db
       driver-class-name: "org.postgresql.Driver"
       username: postgres
       password: postgres
@@ -29,6 +29,9 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yml
+    user: postgres
+    password: postgres
+    url: jdbc:postgresql://postgres:5432/airport_db
 
   thymeleaf:
     cache: false
